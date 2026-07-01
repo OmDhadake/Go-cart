@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
 
 const Navbar = () => {
   const router = useRouter();
+  const { isSignedIn } = useAuth();
 
   const [search, setSearch] = useState("");
   const cartCount = useSelector((state) => state.cart.total);
@@ -65,32 +66,28 @@ const Navbar = () => {
               </button>
             </Link>
 
-            <Show when="signed-out">
+            {!isSignedIn ? (
               <SignInButton mode="modal">
                 <button className="px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full">
                   Login
                 </button>
               </SignInButton>
-            </Show>
-
-            <Show when="signed-in">
+            ) : (
               <UserButton />
-            </Show>
+            )}
           </div>
 
           {/* Mobile User Button  */}
           <div className="sm:hidden">
-            <Show when="signed-out">
+            {!isSignedIn ? (
               <SignInButton mode="modal">
                 <button className="px-7 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-sm transition text-white rounded-full">
                   Login
                 </button>
               </SignInButton>
-            </Show>
-
-            <Show when="signed-in">
+            ) : (
               <UserButton />
-            </Show>
+            )}
           </div>
         </div>
       </div>
